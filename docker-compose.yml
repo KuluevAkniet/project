@@ -1,0 +1,28 @@
+version: '3'
+services:
+
+  postgres:
+    container_name: encar
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5435:5432'
+
+  cache:
+    image: redis:6
+    env_file:
+      - .env
+    ports:
+      - "6380:6379"
+
+  redisinsight:
+    image: redislabs/redisinsight
+    ports:
+      - "8001:8001"
+
