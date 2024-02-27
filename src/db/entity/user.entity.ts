@@ -1,6 +1,7 @@
-import { Column } from "typeorm";
+import { Column, Entity } from "typeorm";
 import { BaseEntity } from "./base.entity";
 
+@Entity('user')
 export class User extends BaseEntity {
     
     @Column()
@@ -11,5 +12,8 @@ export class User extends BaseEntity {
 
     @Column()
     phone?: string;
+
+    @Column()
+    password: string;
     
 }
