@@ -2,7 +2,7 @@ version: '3'
 services:
 
   postgres:
-    container_name: project
+    container_name: project_postgres
     image: postgres:latest
     restart: always
     environment:
@@ -12,9 +12,10 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:
-      - '5435:5432'
+      - '5430:5432'
 
   cache:
+    container_name: project_redis
     image: redis:6
     env_file:
       - .env
@@ -22,7 +23,24 @@ services:
       - "6380:6379"
 
   redisinsight:
+    container_name: project_redisinsight
     image: redislabs/redisinsight
     ports:
       - "8001:8001"
+
+  node_app:
+    container_name: project_node
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    depends_on:
+      - postgres
+      - cache
+
 
